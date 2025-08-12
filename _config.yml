@@ -7,7 +7,8 @@ theme: minima
 # Site basic
 timezone: Europe/Amsterdam
 title: "Tom's Blog"
-description: "A blog site covering topics like low level programming, privacy, computers and more; RSS: **https://tomscheers.github.io/feed.xml**."
+description: "A blog site covering topics like low level programming, privacy, computers and more."
+rss: RSS
 url: "https://tomscheers.github.io"
 
 author: "Tom Scheers"
