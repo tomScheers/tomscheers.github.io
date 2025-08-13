@@ -26,7 +26,7 @@ Where a `char` must be equal or greater than 1 byte, a `short` and `int` must no
 
 ### long Ambiguity
 Most of the types mentioned above are generally the same, except for `long`. The difference depends mainly on the architecture of the operating system. If you run a 32-bit machine a long will generally be 4 bytes, whilst on a 64-bit machine a long is generally 8 bytes. The difference is subtle, but it's important to know about if you want to store large integers in your program for example and want it to be portable across systems. The same goes for `size_t`, since it's defined as an `unsigned long`, it differs from architecture to architecture what the size is. However for a `size_t` this makes more sense, since its primary purpose is storing data related to memory size, it doesn't make sense for it to be larger than the size of a pointer on the system.
-As an example: on a 32-bit system a pointer is stored in 4 bytes of memory, so you can *only* have 4,294,967,296 unique pointers in your program. Consequently that's also the max size of a `size_t`, so if you're keeping track of the amount of values in an array on a 32-bit system, the size of that array will never exceed 4,294,967,296. 
+As an example: on a 32-bit system a pointer is stored in 4 bytes of memory, so you can *only* have 4,294,967,296 unique pointers in your program. Consequently that's also the max size of a `size_t`, so if you're keeping track of the amount of values in an array on a 32-bit system, the size of that array will never exceed 4,294,967,296.
 
 ## Unsigned VS Signed
 You can split all integer types up into two groups; those who are signed and those who aren't. But what exactly does it mean for an integer to be *signed*? Before getting into the memory, let's first look at what the difference is in value.
@@ -40,8 +40,9 @@ To find out we have to look into memory. Let's go with a -32 signed integer as a
 ```
 
 What? That's so much different than how 32 is stored in memory? Let's look at this with a step per step example.
-- The most significant bit (MSB) is the sign, so if this is 1 it's negative and if it's 0 it's positive, so in this case we're dealing with a negative number.
-  
+
+The most significant bit (MSB) is the sign, so if this is 1 it's negative and if it's 0 it's positive, so in this case we're dealing with a negative number.
+
 But this doesn't actually explain the rest of the integer. What does explain it is Two's Complement (method used for storing signed integers). This is the method for calculating any given negative number:
 1. starting with the absolute binary representation of the number, with the leading bit being a sign bit;
 2. inverting (or flipping) all bits – changing every 0 to 1, and every 1 to 0;
@@ -52,7 +53,7 @@ So using this on our -32 bit example we get:
 1. We take the absolute value of -32, which is 32 and turn it into binary accounting for the signed bit; `0100000`
 2. Then we invert all bits; `1011111`
 3. Then, we add one to this: `1100000`
-   
+
 So -32 in binary is just `1100000`, and since our integer is 32-bit we just add all the zeros (in this case flipped, so all the ones), in between the MSB and the second MSB to get the result we got above.
 
 ### Comparison
@@ -115,13 +116,13 @@ Lucky for us there are even more integral types than just int and it's unsigned 
 - `int64_t`
 - `uint64_t`
 
-The good things about these types is that their size is always the same across all systems. The type naming is also very intuitive, if it has a 'u' in front of it it's an unsigned integer, otherwise it's signed, and the number in the type name represents the amount of bits the number holds. So let's say you wanted to have an unsigned 4 byte integer, you'd just use `uint32_t`, which is easier than `unsigned int` and it guarantees to actually hold 4 bytes of data. 
+The good things about these types is that their size is always the same across all systems. The type naming is also very intuitive, if it has a 'u' in front of it it's an unsigned integer, otherwise it's signed, and the number in the type name represents the amount of bits the number holds. So let's say you wanted to have an unsigned 4 byte integer, you'd just use `uint32_t`, which is easier than `unsigned int` and it guarantees to actually hold 4 bytes of data.
 ### Chars Are Types Too!
 One of the things which tripped me up as a beginner was storing number data in a `char`. The name would suggest that `char` is only used for storing character, but this isn't entirely the case. Although it is true that `char` is often used to store character data in `ASCII` format, it is essentially just another integral type capable of storing 1 byte. This small size also means that it's range isn't that large, just 0 to 255 if unsigned and -128 to 127 if signed.
 One thing which is unique about  `char` compared to it's other integral relatives is that the signed modifier isn't implied, neither is the unsigned modifier. `char` on it's own can either be signed or unsigned depending on compiler and architecture. If you want to check whether `char` is signed or unsigned on your system you can do so by checking if `CHAR_MIN`, defined in `limits.h`, is less than 0 it's signed, otherwise it's unsigned. This ambiguity can make it hard to use `char` directly as an integral value. That's why if you want to use `char` to store integers you should always implicitly use either `signed` or `unsigned` depending on the context. This makes the type work like any other integral type.
 
 ## Floating-points
-There are also 3 primitive floating-point types, namely `float` (4 bytes), `double` (8 bytes) and `long double`, the last of which is a little bit more tricky in size, but it's at least 10 bytes in size, but usually greater depending on architecture. These types are used for storing floating-point data (as the name suggests) like 0.1 or 3.14 for example. 
+There are also 3 primitive floating-point types, namely `float` (4 bytes), `double` (8 bytes) and `long double`, the last of which is a little bit more tricky in size, but it's at least 10 bytes in size, but usually greater depending on architecture. These types are used for storing floating-point data (as the name suggests) like 0.1 or 3.14 for example.
 Floating-point types are a little bit more tricky to store in memory than integral types because of their nature. They use a [single-precision floating-point format](https://en.wikipedia.org/wiki/Single-precision_floating-point_format), where a signed float has the same maximum value as a signed integer. All integers with 7 or fewer decimal digits, and any whole digit 2^n where n ranges from -149 to 127 can be represented accurately in a float.
 In memory a 32-bit float looks as follows:
 - 1 sign bit
@@ -162,7 +163,7 @@ $$
 ### Special Bumbers
 There are also some special cases with floating-point types, here's a list of some of them:
 #### ±Zero
-If both the exponent and the fraction are zero, the float holds the value zero. However, you can actually have -0.0 if it's a float. This is because floating-points are mainly based upon approximations, so if an integer from -1 is approaching 0 it'll become -0.0. 
+If both the exponent and the fraction are zero, the float holds the value zero. However, you can actually have -0.0 if it's a float. This is because floating-points are mainly based upon approximations, so if an integer from -1 is approaching 0 it'll become -0.0.
 
 #### Subnormals
 Subnormals are numbers which are too tiny to be stored in the regular format but still aren't quite 0. A number is subnormal when the exponent bit is zero and the fraction is non-zero. This is how the new formula of the subnormal looks like:
